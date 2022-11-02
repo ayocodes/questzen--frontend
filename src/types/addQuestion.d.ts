@@ -1,22 +1,30 @@
-type AddQuestionState = AddQuestionObject[];
+type QuizState = QuizObject[];
 
-interface AddQuestionObject {
+
+interface QuizObject {
   question: string;
   options: string[];
 }
 
-interface AddQuestionAction {
+interface QuizAction {
   type: any;
-  payload: AddQuestionPayload;
+  questionPayload?: QuestionPayload;
+  optionPayload?: OptionsPayload;
 }
 
-interface AddQuestionPayload {
+interface QuestionPayload {
   index?: number;
-  name?: "question" | "option";
+  name?: string;
   value?: string;
 }
 
-interface AddQuestionProvider {
+interface OptionsPayload {
+  index: number;
+  optionIndex: number;
+  value: string;
+}
+
+interface QuizProvider {
   children: React.ReactNode;
-  initialState: AddQuestionState;
+  initialState: QuizState;
 }

@@ -1,13 +1,14 @@
 import { createContext, useReducer } from "react";
 
-const reducer = (state: AddQuestionState, action: AddQuestionAction) => {
-  let newState: AddQuestionState;
+const reducer = (state: QuizState, action: QuizAction) => {
+  let newState: QuizState;
   let index: number;
   let name: string;
   let value: any;
+  let optionIndex: number;
 
   switch (action.type) {
-    case addQuestionActions.ADD_FIELD:
+    case quizActions.ADD_FIELD:
       newState = [
         ...state,
         {
@@ -17,22 +18,32 @@ const reducer = (state: AddQuestionState, action: AddQuestionAction) => {
       ];
       break;
 
-    case addQuestionActions.DELETE_FIELD:
-      index = action.payload.index!;
+    case quizActions.DELETE_FIELD:
+      index = action.questionPayload.index!;
       state.splice(index, 1);
 
       newState = [...state];
       break;
 
-    case addQuestionActions.CHANGE_INPUT:
-      index = action.payload.index!;
-      name = action.payload.name!;
-      value = action.payload.value!;
+    case quizActions.CHANGE_QUESTION_INPUT:
+      index = action.questionPayload.index!;
+      name = action.questionPayload.name!;
+      value = action.questionPayload.value!;
 
       state[index] = {
         ...state[index],
         [name]: value,
       };
+
+      newState = [...state];
+      break;
+
+    case quizActions.CHANGE_OPTION_INPUT:
+      index = action.optionPayload.index!;
+      optionIndex = action.optionPayload.optionIndex!;
+      value = action.optionPayload.value!;
+
+      state[index].options[optionIndex] = value;
 
       newState = [...state];
       break;
@@ -44,23 +55,26 @@ const reducer = (state: AddQuestionState, action: AddQuestionAction) => {
   return newState;
 };
 
-export const AddQuestionContext = createContext<any>(undefined);
+export const QuizContext = createContext<any>(undefined);
 
-export const AddQuestionProvider: React.FC<AddQuestionProvider> = ({
+export const QuizProvider: React.FC<QuizProvider> = ({
   children,
   initialState,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const value = { addQuestionState: state, addQuestionDispatch: dispatch };
+  const value = { quizState: state, quizDispatch: dispatch };
 
   return (
-    <AddQuestionContext.Provider value={value}>{children}</AddQuestionContext.Provider>
+    <QuizContext.Provider value={value}>
+      {children}
+    </QuizContext.Provider>
   );
 };
 
-export const addQuestionActions = {
+export const quizActions = {
   ADD_FIELD: "ADD_FIELD",
   DELETE_FIELD: "DELETE_FIELD",
-  CHANGE_INPUT: "CHANGE_INPUT",
+  CHANGE_QUESTION_INPUT: "CHANGE_QUESTION_INPUT",
+  CHANGE_OPTION_INPUT: "CHANGE_OPTION_INPUT",
 };

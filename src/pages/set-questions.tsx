@@ -1,7 +1,9 @@
-import React from "react";
+import React, { ChangeEvent, useCallback, useContext, useEffect } from "react";
 import NavBar from "../components/NavBar";
 import QuestionBox from "../components/QuestionBox";
 import styled from "styled-components";
+import { QuizContext, quizActions } from "../state/addQuestion";
+import { AnswerContext, answerActions } from "../state/answer";
 
 const SBox = styled.div`
   display: flex;
@@ -78,23 +80,145 @@ const SSingleQuestionBox = styled.div`
 `;
 
 const setQuestions = () => {
+  const { quizState, quizDispatch } = useContext(QuizContext) as {
+    quizState: QuizState;
+    quizDispatch: any;
+  };
+
+  const { answerState, answerDispatch } = useContext(AnswerContext) as {
+    answerState: AnswerState;
+    answerDispatch: any;
+  };
+
+  const handleAddAnswer = useCallback((answer: number) => {
+    answerDispatch({
+      type: answerActions,
+      answerPayload: {
+        value: answer,
+      } as AnswerPayload,
+    });
+  }, []);
+
+  const handleAddQuiz = useCallback(() => {
+    quizDispatch({
+      type: quizActions.ADD_FIELD,
+    });
+  }, []);
+
+  const generateRandomNumber = () => {
+    const answer = Math.floor(Math.random() * 4);
+    alert(answer)
+    handleAddAnswer(answer);
+  };
+
+  useEffect(() => {
+    handleAddQuiz();
+    generateRandomNumber();
+    // alert(answerState)
+  }, []);
+
+  const handleQuestionInputChange = useCallback(
+    (e: ChangeEvent<HTMLTextAreaElement>, i: number) => {
+      quizDispatch({
+        type: quizActions.CHANGE_QUESTION_INPUT,
+        questionPayload: {
+          index: i,
+          name: e.target.name,
+          value: e.target.value,
+        } as QuestionPayload,
+      });
+    },
+    []
+  );
+
+  const handleOptionInputChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>, i: number, ii: number) => {
+      quizDispatch({
+        type: quizActions.CHANGE_OPTION_INPUT,
+        optionPayload: {
+          index: i,
+          optionIndex: ii,
+          value: e.target.value,
+        } as OptionsPayload,
+      });
+    },
+    []
+  );
+
+  const addQuestion = () => {
+    handleAddQuiz();
+    generateRandomNumber();
+  };
+
+  const answerDudState = ["a", "c", "d", "d"]
+
   return (
     <SBox>
-      <SSingleQuestionBox>
-        <SImg>1</SImg>
-        <SQuestionBox>
-          <STitle>Question</STitle>
-          <STextArea id="description" rows={4} />
-          <STitle>Options</STitle>
-          <SCorrectInput placeholder={"Correct Answer"} />
-          <SDudTextArea placeholder={"Incorrect Answer"} />
-        </SQuestionBox>
-      </SSingleQuestionBox>
+      {quizState.map((quiz, i) => {
+        return (
+          <SSingleQuestionBox>
+            <SImg>{i + 1}</SImg>
+
+            <SQuestionBox>
+              <STitle>Question</STitle>
+              <STextArea
+                id="description"
+                rows={4}
+                value={quiz.question}
+                onChange={(e) => handleQuestionInputChange(e, i)}
+                name="question"
+              />
+              <STitle>Options</STitle>
+              {quiz.options.map((option, ii) => {
+                let answerIndex;
+
+                switch (answerDudState[i]) {
+                  case "a":
+                    answerIndex = 0;
+                    break;
+
+                  case "b":
+                    answerIndex = 1;
+                    break;
+
+                  case "c":
+                    answerIndex = 2;
+                    break;
+
+                  case "d":
+                    answerIndex = 3;
+                    break;
+
+                  default:
+                    answerIndex = 0;
+                    break;
+                }
+
+                const isAnswerInput = ii == answerIndex;
+
+                return isAnswerInput ? (
+                  <SCorrectInput
+                    placeholder={"Input Correct Answer"}
+                    value={option}
+                    onChange={(e) => handleOptionInputChange(e, i, ii)}
+                  />
+                ) : (
+                  <SDudTextArea
+                    placeholder={"Input Incorrect Answer"}
+                    value={option}
+                    onChange={(e) => handleOptionInputChange(e, i, ii)}
+                  />
+                );
+              })}
+            </SQuestionBox>
+          </SSingleQuestionBox>
+        );
+      })}
 
       <NavBar
         leftButtonText={"Add Question"}
         rightButtonText={"See Preview"}
-        leftButtonFunc={undefined}
+        leftButtonFunc={addQuestion}
         rightButtonFunc={undefined}
         leftImgSource="add.svg"
         rightImgSource="preview.svg"
