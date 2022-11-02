@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import Router from "next/router";
 import styled from "styled-components";
 
 const SBody = styled.div`
@@ -80,7 +81,6 @@ const SQuizDuration = styled.p`
   color: #fff;
 `;
 
-// const SQ
 
 const Home: NextPage = () => {
   return (
@@ -94,7 +94,7 @@ const Home: NextPage = () => {
       <SBody>
         <SMain>
           <SPageHeader>QuestZen</SPageHeader>
-          <SCreateQuiz>
+          <SCreateQuiz onClick={() => Router.push("./set-questions")}>
             <p>Create a Quiz</p>
             <img src="addLight.svg" alt="" />
           </SCreateQuiz>

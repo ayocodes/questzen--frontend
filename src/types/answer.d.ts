@@ -1,12 +1,8 @@
-type AnswerState = number[];
+type AnswerState = string[];
 
 interface AnswerAction {
   type: any;
-  payload: AnswerPayload;
-}
-
-interface AnswerPayload {
-  value?: number;
+  payload: string;
 }
 
 interface AnswerProvider {

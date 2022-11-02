@@ -12,7 +12,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <QuizProvider initialState={[]}>
-      <AnswerProvider initialState={[1, 2, 0, 1]}>
+      <AnswerProvider initialState={[]}>
         <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
           <GlobalStyle />
           <Scaffold>

@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 interface IQuestionProps {
-  question: string;
+  question: String;
   options: string[];
   answer: string;
-  setAnswerIndex: (x: string) => void;
 }
 
 interface ISelected {
@@ -85,7 +84,6 @@ const QuestionBox: React.FC<IQuestionProps> = ({
   question,
   options,
   answer,
-  setAnswerIndex,
 }) => {
   const [answer1, answer2, answer3, answer4] = options;
 
@@ -95,44 +93,24 @@ const QuestionBox: React.FC<IQuestionProps> = ({
         <SQuestion>{question}</SQuestion>
       </SQuestionBox>
 
-      <SAnswerBox
-        selectA={"a" == answer}
-        onClick={() => {
-          setAnswerIndex("a");
-        }}
-      >
+      <SAnswerBox selectA={"a" == answer}>
         <SImg selectA={"a" == answer}>A</SImg>
         <SAnswer selectA={"a" == answer}> {answer1} </SAnswer>
       </SAnswerBox>
 
-      <SAnswerBox
-        selectB={"b" === answer}
-        onClick={() => {
-          setAnswerIndex("b");
-        }}
-      >
-        <SImg selectB={"b" === answer}>B</SImg>
-        <SAnswer selectB={"b" === answer}> {answer2} </SAnswer>
+      <SAnswerBox selectB={"b" == answer}>
+        <SImg selectB={"b" == answer}>B</SImg>
+        <SAnswer selectB={"b" == answer}> {answer2} </SAnswer>
       </SAnswerBox>
 
-      <SAnswerBox
-        selectC={"c" === answer}
-        onClick={() => {
-          setAnswerIndex("c");
-        }}
-      >
-        <SImg selectC={"c" === answer}>C</SImg>
-        <SAnswer selectC={"c" === answer}> {answer3} </SAnswer>
+      <SAnswerBox selectC={"c" == answer}>
+        <SImg selectC={"c" == answer}>C</SImg>
+        <SAnswer selectC={"c" == answer}> {answer3} </SAnswer>
       </SAnswerBox>
 
-      <SAnswerBox
-        selectD={"d" === answer}
-        onClick={() => {
-          setAnswerIndex("d");
-        }}
-      >
-        <SImg selectD={"d" === answer}>D</SImg>
-        <SAnswer selectD={"d" === answer}> {answer4} </SAnswer>
+      <SAnswerBox selectD={"d" == answer}>
+        <SImg selectD={"d" == answer}>D</SImg>
+        <SAnswer selectD={"d" == answer}> {answer4} </SAnswer>
       </SAnswerBox>
     </SBox>
   );

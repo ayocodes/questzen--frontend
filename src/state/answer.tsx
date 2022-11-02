@@ -2,11 +2,11 @@ import { createContext, useReducer } from "react";
 
 const reducer = (state: AnswerState, action: AnswerAction) => {
   let newState: AnswerState;
-  let value: any;
+  let value: string;
 
   switch (action.type) {
     case answerActions.ADD_ANSWER:
-      value = action.payload.value!;
+      value = action.payload;
 
       state.push(value);
       newState = [...state];
