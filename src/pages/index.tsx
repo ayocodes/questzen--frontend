@@ -1,7 +1,12 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Router from "next/router";
+import { useState } from "react";
 import styled from "styled-components";
+
+interface ITitle {
+  selected: boolean;
+}
 
 const SBody = styled.div`
   display: flex;
@@ -41,23 +46,64 @@ const SCreateQuiz = styled.div`
   border-radius: 1em;
 `;
 
-const Sp = styled.p`
+const Sp = styled.p<ITitle>`
   font-weight: 600;
-  font-size: 2rem;
+  font-size: 1.8rem;
   line-height: 2rem;
   margin-bottom: 2rem;
+  margin-right: 2.5rem;
+  cursor: pointer;
+
+  ${({ selected }) =>
+    selected &&
+    `background: linear-gradient(to right, #ff8787 -6.98%, #c157f6 111.45%);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;`};
+
+  :hover {
+    background: linear-gradient(to right, #ff8787 -6.98%, #c157f6 111.45%);
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+  }
+`;
+
+const STitle = styled.p<ITitle>`
+  font-weight: 600;
+  font-size: 1.8rem;
+  line-height: 2rem;
+  margin-bottom: 2rem;
+  cursor: pointer;
+
+  ${({ selected }) =>
+    !selected &&
+    `  background: linear-gradient(to right, #ff8787 -6.98%, #c157f6 111.45%);
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;`};
+
+  :hover {
+    background: linear-gradient(to right, #ff8787 -6.98%, #c157f6 111.45%);
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+  }
 `;
 
 const SQuizCard = styled.div`
   display: flex;
   width: 13rem;
-  height: 14.5rem;
+  height: 10.5rem;
   cursor: pointer;
   padding: 20px 10px;
   background-color: #3e9fff;
   flex-direction: column;
   justify-content: end;
   border-radius: 1rem;
+  transition: 250ms box-shadow;
+
+  :hover {
+    box-shadow: 5px 10px 10px rgba(62, 159, 255, 0.25);
+  }
 `;
 
 const SQuizCardBox = styled.div`
@@ -81,8 +127,82 @@ const SQuizDuration = styled.p`
   color: #fff;
 `;
 
+const STitleBox = styled.div`
+  display: flex;
+`;
 
 const Home: NextPage = () => {
+  const [happening, setHappening] = useState(true);
+
+  const date = Date.now();
+
+  const data = [
+    {
+      title: "who wants to be a millionaire",
+      Curator: "Kelvin Praise",
+      duration: "45min",
+      expireDate: 1667824831937,
+    },
+    {
+      title: "who wants to be a billionaire",
+      Curator: "drokeyi Praise",
+      duration: "45min",
+      expireDate: 1667824831937,
+    },
+    {
+      title: "who wants to be a zillionaire",
+      Curator: "Kevin Harris",
+      duration: "1 day",
+      expireDate: 1667824831937,
+    },
+    {
+      title: "who wants to be a coder",
+      Curator: "Kelvin Praise",
+      duration: "45min",
+      expireDate: 1667824831937,
+    },
+    {
+      title: "who wants to be a poor man?",
+      Curator: "no one wants",
+      duration: "45min",
+      expireDate: 1667824831937,
+    },
+    {
+      title: "who wants to be a student",
+      Curator: "Kelvin Praise",
+      duration: "45min",
+      expireDate: 1667824831937,
+    },
+    {
+      title: "who wants to have a laptop",
+      Curator: "Kelvin Praise",
+      duration: "45min",
+      expireDate: 1669824831937,
+    },
+  ];
+
+  const happeningNow: {
+    title: string;
+    Curator: string;
+    duration: string;
+    expireDate: number;
+  }[] = [];
+
+  const expired: {
+    title: string;
+    Curator: string;
+    duration: string;
+    expireDate: number;
+  }[] = [];
+
+  data.forEach((item) => {
+    if (item.expireDate >= date!) {
+      happeningNow.push(item);
+    } else {
+      expired.push(item);
+    }
+  });
+
   return (
     <>
       <Head>
@@ -98,44 +218,45 @@ const Home: NextPage = () => {
             <p>Create a Quiz</p>
             <img src="addLight.svg" alt="" />
           </SCreateQuiz>
+          <STitleBox>
+            <Sp onClick={() => setHappening(true)} selected={happening}>
+              Live Quiz
+            </Sp>
+            <STitle onClick={() => setHappening(false)} selected={happening}>
+              Expired Quiz
+            </STitle>
+          </STitleBox>
 
-          <Sp>Live Quiz</Sp>
           <SQuizCardBox>
-            <SQuizCard>
-              <SQuizDetails>AlgoReach Quiz</SQuizDetails>
-              <SQuizDetails style={{ fontWeight: "400" }}>
-                Curator: Kelvin Praise
-              </SQuizDetails>
-              <SQuizDuration>Duration: 3days</SQuizDuration>
-            </SQuizCard>
-            <SQuizCard>
-              <SQuizDetails>AlgoReach Quiz</SQuizDetails>
-              <SQuizDetails style={{ fontWeight: "400" }}>
-                Curator: Kelvin Praise
-              </SQuizDetails>
-              <SQuizDuration>Duration: 3days</SQuizDuration>
-            </SQuizCard>
-            <SQuizCard>
-              <SQuizDetails>AlgoReach Quiz</SQuizDetails>
-              <SQuizDetails style={{ fontWeight: "400" }}>
-                Curator: Kelvin Praise
-              </SQuizDetails>
-              <SQuizDuration>Duration: 3days</SQuizDuration>
-            </SQuizCard>
-            <SQuizCard>
-              <SQuizDetails>AlgoReach Quiz</SQuizDetails>
-              <SQuizDetails style={{ fontWeight: "400" }}>
-                Curator: Kelvin Praise
-              </SQuizDetails>
-              <SQuizDuration>Duration: 3days</SQuizDuration>
-            </SQuizCard>
-            <SQuizCard>
-              <SQuizDetails>AlgoReach Quiz</SQuizDetails>
-              <SQuizDetails style={{ fontWeight: "400" }}>
-                Curator: Kelvin Praise
-              </SQuizDetails>
-              <SQuizDuration>Duration: 3days</SQuizDuration>
-            </SQuizCard>
+            {happening ? (
+              <>
+                {happeningNow.map((item, i) => {
+                  return (
+                    <SQuizCard>
+                      <SQuizDetails>{item.title}</SQuizDetails>
+                      <SQuizDetails style={{ fontWeight: "400" }}>
+                        Curator: {item.Curator}
+                      </SQuizDetails>
+                      <SQuizDuration>Duration: {item.duration}</SQuizDuration>
+                    </SQuizCard>
+                  );
+                })}
+              </>
+            ) : (
+              <>
+                {expired.map((item, i) => {
+                  return (
+                    <SQuizCard>
+                      <SQuizDetails>{item.title}</SQuizDetails>
+                      <SQuizDetails style={{ fontWeight: "400" }}>
+                        Curator: {item.Curator}
+                      </SQuizDetails>
+                      <SQuizDuration>Duration: {item.duration}</SQuizDuration>
+                    </SQuizCard>
+                  );
+                })}
+              </>
+            )}
           </SQuizCardBox>
         </SMain>
       </SBody>
