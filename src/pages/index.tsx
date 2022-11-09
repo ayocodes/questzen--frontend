@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Router from "next/router";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import styled from "styled-components";
 
 interface ITitle {
@@ -46,34 +46,14 @@ const SCreateQuiz = styled.div`
   border-radius: 1em;
 `;
 
-const Sp = styled.p<ITitle>`
-  font-weight: 600;
-  font-size: 1.8rem;
-  line-height: 2rem;
-  margin-bottom: 2rem;
-  margin-right: 2.5rem;
-  cursor: pointer;
-
-  ${({ selected }) =>
-    selected &&
-    `background: linear-gradient(to right, #ff8787 -6.98%, #c157f6 111.45%);
-    -webkit-text-fill-color: transparent;
-    -webkit-background-clip: text;`};
-
-  :hover {
-    background: linear-gradient(to right, #ff8787 -6.98%, #c157f6 111.45%);
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    -webkit-background-clip: text;
-  }
-`;
-
 const STitle = styled.p<ITitle>`
   font-weight: 600;
   font-size: 1.8rem;
   line-height: 2rem;
+  margin-right: 2.5rem;
   margin-bottom: 2rem;
   cursor: pointer;
+  user-select: none;
 
   ${({ selected }) =>
     !selected &&
@@ -144,36 +124,6 @@ const Home: NextPage = () => {
       expireDate: 1667824831937,
     },
     {
-      title: "who wants to be a billionaire",
-      Curator: "drokeyi Praise",
-      duration: "45min",
-      expireDate: 1667824831937,
-    },
-    {
-      title: "who wants to be a zillionaire",
-      Curator: "Kevin Harris",
-      duration: "1 day",
-      expireDate: 1667824831937,
-    },
-    {
-      title: "who wants to be a coder",
-      Curator: "Kelvin Praise",
-      duration: "45min",
-      expireDate: 1667824831937,
-    },
-    {
-      title: "who wants to be a poor man?",
-      Curator: "no one wants",
-      duration: "45min",
-      expireDate: 1667824831937,
-    },
-    {
-      title: "who wants to be a student",
-      Curator: "Kelvin Praise",
-      duration: "45min",
-      expireDate: 1667824831937,
-    },
-    {
       title: "who wants to have a laptop",
       Curator: "Kelvin Praise",
       duration: "45min",
@@ -196,7 +146,7 @@ const Home: NextPage = () => {
   }[] = [];
 
   data.forEach((item) => {
-    if (item.expireDate >= date!) {
+    if (item.expireDate >= date) {
       happeningNow.push(item);
     } else {
       expired.push(item);
@@ -219,9 +169,9 @@ const Home: NextPage = () => {
             <img src="addLight.svg" alt="" />
           </SCreateQuiz>
           <STitleBox>
-            <Sp onClick={() => setHappening(true)} selected={happening}>
+            <STitle onClick={() => setHappening(true)} selected={!happening}>
               Live Quiz
-            </Sp>
+            </STitle>
             <STitle onClick={() => setHappening(false)} selected={happening}>
               Expired Quiz
             </STitle>

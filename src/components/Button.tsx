@@ -36,6 +36,7 @@ const SButtonText = styled.p<ButtonTextProps>`
   font-size: 1.25rem;
   align-items: center;
   font-weight: 500;
+  user-select: none;
 `;
 
 const SImgText = styled.div`
