@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Quiz from "../../components/Quiz";
 import { useRouter } from "next/router";
@@ -18,11 +18,29 @@ const Slink = styled(Link)`
 `;
 
 const index = () => {
-  const [loading, setLoading] = useState(false);
+  const [quizData, setQuizData] =
+    useState<{ question: string; options: string[] }[]>();
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [quizOver, setQuizOver] = useState(false);
   const router = useRouter();
   const { pid } = router.query;
+
+  const cid = "bafkreiav6ng7lrjytgw6dqobmag3oepelrtdxqbwv2kmtpbangn5gwnhcm";
+
+  useEffect(() => {
+    try {
+      fetch(`https://${cid}.ipfs.w3s.link/`)
+        .then((results) => results.json())
+        .then((data) => {
+          setQuizData(data);
+        });
+      setLoading(false);
+    } catch (error) {
+      setError(true);
+      console.error(error);
+    }
+  }, []);
 
   if (loading) {
     return <SBox>Loading...</SBox>;
@@ -42,7 +60,9 @@ const index = () => {
   if (quizOver) {
     return <QuizOver quizState={"waiting"} />;
   } else {
-    return <Quiz quizDuration={"30"} />;
+    return (
+      <Quiz quizDuration={"30"} quizData={quizData} setQuizOver={setQuizOver} />
+    );
   }
 };
 

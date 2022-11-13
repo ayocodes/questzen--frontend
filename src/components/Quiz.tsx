@@ -11,6 +11,8 @@ interface IProgressBar {
 
 interface IQuizDetails {
   quizDuration: string;
+  setQuizOver: React.Dispatch<React.SetStateAction<boolean>>;
+  quizData: any;
 }
 
 const SProgressBar = styled.div`
@@ -72,47 +74,16 @@ const SBig = styled.p`
   padding-bottom: 2rem;
 `;
 
-const quiz = [
-  {
-    question: "What is the second largest river in the world?",
-    options: ["nile3", "niger3", "senegal3", "limpopo3"],
-  },
-  {
-    question: "What is the second largest mountain in the world?",
-    options: ["nile4", "niger4", "senegal4", "limpopo4"],
-  },
-  {
-    question: "What is the second largest mountain in the world?",
-    options: ["nile4", "niger4", "senegal4", "limpopo4"],
-  },
-  {
-    question: "What is the second largest mountain in the world?",
-    options: ["nile4", "niger4", "senegal4", "limpopo4"],
-  },
-];
-
-const Quiz: React.FC<IQuizDetails> = ({ quizDuration }) => {
-  
-  async function retrieve(cid: string) {
-    const res = await fetch(`https://${cid}.ipfs.w3s.link/`).then((response) =>
-      response.json()
-    );
-    console.log(res);
-  }
-
-  retrieve("bafkreiav6ng7lrjytgw6dqobmag3oepelrtdxqbwv2kmtpbangn5gwnhcm");
-
+const Quiz: React.FC<IQuizDetails> = ({
+  quizDuration,
+  quizData,
+  setQuizOver,
+}) => {
   const [count, setCount] = useState(0);
-  const [quizData, setQuizData] =
-    useState<{ question: string; options: string[] }[]>();
   const [answer, setAnswer] = useState<string[]>();
-  const [showQuizDetails, setShowQuizDetails] = useState(true);
+  const [showQuizDetails , setShowQuizDetails] = useState(true);
 
   const length = quizData?.length;
-
-  useEffect(() => {
-    setQuizData(quiz);
-  }, []);
 
   useEffect(() => {
     if (quizData?.length) {
@@ -140,9 +111,12 @@ const Quiz: React.FC<IQuizDetails> = ({ quizDuration }) => {
 
   const nextButton = () => {
     if (count + 1 == length) {
-      confirm(
-        "You are about to submit, you can only perform this action once.\nSubmit?"
-      );
+      if (
+        confirm(
+          `You are about to submit, you can only perform this action once.\nSubmit? ${answer}`
+        ) == true
+      )
+        setQuizOver(true);
       return;
     }
     setCount(count + 1);
@@ -150,11 +124,7 @@ const Quiz: React.FC<IQuizDetails> = ({ quizDuration }) => {
 
   const progressBarWidth = (count + 1) * (100 / length!);
 
-  if (!answer?.length) {
-    return <SBox>Loading...</SBox>;
-  }
-
-  if (showQuizDetails) {
+  if (showQuizDetails ) {
     return (
       <SBox2>
         <SBig>This Quiz ends in {quizDuration} minutes</SBig>
