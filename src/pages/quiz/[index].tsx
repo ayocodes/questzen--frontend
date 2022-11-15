@@ -38,7 +38,7 @@ const index = () => {
       setLoading(false);
     } catch (error) {
       setError(true);
-      console.error(error);
+      alert(error);
     }
   }, []);
 
